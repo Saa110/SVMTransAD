@@ -66,9 +66,14 @@ def build_tranad_model(window_size, num_features, embed_dim=64, num_heads=4, ff_
     focus_input = layers.Input(shape=(window_size, num_features))
 
     # Apply positional encoding
-    pe = positional_encoding(window_size, num_features)
-    window_pe = window_input + pe
-    focus_pe = focus_input + pe
+    # Project input to embedding dimension
+    window_proj = layers.Dense(embed_dim)(window_input)
+    focus_proj = layers.Dense(embed_dim)(focus_input)
+
+    # Apply positional encoding (should be [window_size, embed_dim])
+    pe = positional_encoding(window_size, embed_dim)
+    window_pe = window_proj + pe
+    focus_pe = focus_proj + pe
 
     # Context encoder (self-attention over full sequence)
     context_encoded = TransformerBlock(embed_dim, num_heads, ff_dim)(focus_pe, training=True)
