@@ -8,6 +8,11 @@ Python 3.11.11
 pip install -r requirements.txt
 ```
 
+then preprocess the data using
+```
+python ./preprocess.py "SMD"
+```
+
 then run-
 ```
 python ./main.py
